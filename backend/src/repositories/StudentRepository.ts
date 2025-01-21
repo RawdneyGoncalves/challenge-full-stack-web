@@ -4,34 +4,34 @@ import { Student } from "../entities/Student";
 
 @injectable()
 export class StudentRepository {
+  private repo = AppDataSource.getRepository(Student);
+
   async findAll() {
-    const repo = AppDataSource.getRepository(Student);
-    return await repo.find();
+    return await this.repo.find();
   }
 
-  async create(studentData: any) {
-    const repo = AppDataSource.getRepository(Student);
-    const student = repo.create(studentData);
-    return await repo.save(student);
+  async findById(id: number) {
+    return await this.repo.findOne({ where: { id } });
   }
 
-  async update(id: number, studentData: any) {
-    const repo = AppDataSource.getRepository(Student);
-    const student = await repo.findOneBy({ id });
+  async create(studentData: Partial<Student>) {
+    const student = this.repo.create(studentData);
+    return await this.repo.save(student);
+  }
 
+  async update(id: number, studentData: Partial<Student>) {
+    const student = await this.findById(id);
     if (!student) throw new Error("Student not found");
 
     Object.assign(student, studentData);
-    return await repo.save(student);
+    return await this.repo.save(student);
   }
 
   async delete(id: number) {
-    const repo = AppDataSource.getRepository(Student);
-    const student = await repo.findOneBy({ id });
-
+    const student = await this.findById(id);
     if (!student) throw new Error("Student not found");
 
-    await repo.delete(id);
+    await this.repo.delete(id);
     return student;
   }
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { container } from "@/inversify.config";
+import { container } from '../inversify.config';
 import { AuthController } from "../controllers/AuthController";
 
 const authRoutes = Router();

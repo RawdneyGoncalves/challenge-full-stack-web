@@ -1,6 +1,7 @@
 import { injectable, inject } from "inversify";
 import { StudentRepository } from "../repositories/StudentRepository";
 import { TYPES } from "../types/identifiers";
+import { AppDataSource } from "../config/database";
 
 @injectable()
 export class StudentService {
@@ -23,6 +24,16 @@ export class StudentService {
   }
 
   async deleteStudent(id: number) {
-    return await this.studentRepository.delete(id);
+    const student = await this.studentRepository.findById(id);
+
+    if (!student) {
+      throw new Error("Student not found");
+    }
+
+    const logRepository = AppDataSource.getRepository("student_deletion_log");
+    await logRepository.save({ student_id: id, deleted_at: new Date() });
+
+    await this.studentRepository.delete(id);
+    return student;
   }
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { container } from "@/inversify.config";
+import { container } from '../inversify.config';
 import { StudentController } from "../controllers/StudentController";
 
 const studentRoutes = Router();
