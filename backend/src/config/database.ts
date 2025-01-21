@@ -2,9 +2,9 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import path from "path";
 import { env } from "./env";
-import { CreateStudentDeletionLog1705161234572 } from "@/migrations/CreateStudentDeletionLog1705161234572";
-import { CreateStudentTable1705161234571 } from "@/migrations/CreateStudentTable1705161234571";
-import { CreateUserTable1705161234570 } from "@/migrations/CreateUserTable1705161234570";
+import { CreateStudentDeletionLog1705161234572 } from "../migrations/CreateStudentDeletionLog1705161234572";
+import { CreateStudentTable1705161234571 } from "../migrations//CreateStudentTable1705161234571";
+import { CreateUserTable1705161234570 } from "../migrations//CreateUserTable1705161234570";
 
 export const AppDataSource = new DataSource({
   type: env.DB_TYPE,
