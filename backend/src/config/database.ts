@@ -1,15 +1,25 @@
+import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "../entities/User";
-import { Student } from "../entities/Student";
+import path from "path";
+import { env } from "./env";
+import { CreateStudentDeletionLog1705161234572 } from "@/migrations/CreateStudentDeletionLog1705161234572";
+import { CreateStudentTable1705161234571 } from "@/migrations/CreateStudentTable1705161234571";
+import { CreateUserTable1705161234570 } from "@/migrations/CreateUserTable1705161234570";
 
 export const AppDataSource = new DataSource({
-  type: "postgres",
-  host: process.env.DB_HOST || "localhost",
-  port: parseInt(process.env.DB_PORT || "5432", 10),
-  username: process.env.DB_USER || "postgres",
-  password: process.env.DB_PASSWORD || "password",
-  database: process.env.DB_NAME || "students_db",
-  synchronize: true,
-  logging: false,
-  entities: [User, Student],
+  type: env.DB_TYPE,
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+  entities: [path.join(__dirname, "../entities/*.{ts,js}")],
+  migrations: [
+    CreateStudentDeletionLog1705161234572,
+    CreateStudentTable1705161234571,
+    CreateUserTable1705161234570,
+  ],
+  synchronize: false,
+  logging: process.env.DB_LOGGING === "true",
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
 });
