@@ -5,11 +5,9 @@ import { TYPES } from "../types/identifiers";
 
 @injectable()
 export class StudentController {
-  declare private studentService: StudentService;
-
-  constructor(@inject(TYPES.StudentService) studentService: StudentService) {
-    this.studentService = studentService;
-  }
+  constructor(
+    @inject(TYPES.StudentService) private studentService: StudentService
+  ) {}
 
   async getStudents(req: Request, res: Response) {
     const students = await this.studentService.getAllStudents();

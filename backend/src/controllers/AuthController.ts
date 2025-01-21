@@ -5,11 +5,9 @@ import { TYPES } from "../types/identifiers";
 
 @injectable()
 export class AuthController {
-  declare private authService: AuthService;
-
-  constructor(@inject(TYPES.AuthService) authService: AuthService) {
-    this.authService = authService;
-  }
+  constructor(
+    @inject(TYPES.AuthService) private authService: AuthService
+  ) {}
 
   async login(req: Request, res: Response) {
     const { username, password } = req.body;
