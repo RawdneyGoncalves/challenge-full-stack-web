@@ -1,9 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
-import Login from '../views/Login.vue'
-import Dashboard from '../views/Dashboard.vue'
-import Students from '../views/Students.vue'
-import Registro from '../views/Register.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
+import { authService } from '../services/api';
+
+import Login from '../views/Login.vue';
+import Dashboard from '../views/Dashboard.vue';
+import Students from '../views/Students.vue';
+import Register from '../views/Register.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,8 +20,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/registro',
-    name: 'Registro',
-    component: Registro,
+    name: 'Register',
+    component: Register,
     meta: { requiresAuth: false }
   },
   {
@@ -34,22 +36,23 @@ const routes: Array<RouteRecordRaw> = [
     component: Students,
     meta: { requiresAuth: true }
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
-})
+});
 
 router.beforeEach((to, from, next) => {
-  const jwt = localStorage.getItem('jwt')
-  if (to.meta.requiresAuth && !jwt) {
-    next('/login')
-  } else if ((to.path === '/login' || to.path === '/registro') && jwt) {
-    next('/dashboard')
-  } else {
-    next()
-  }
-})
+  const isAuthenticated = authService.isAuthenticated();
 
-export default router
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login');
+  } else if ((to.path === '/login' || to.path === '/registro') && isAuthenticated) {
+    next('/dashboard');
+  } else {
+    next();
+  }
+});
+
+export default router;
