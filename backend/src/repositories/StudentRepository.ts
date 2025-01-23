@@ -21,7 +21,9 @@ export class StudentRepository {
 
   async update(id: number, studentData: Partial<Student>) {
     const student = await this.findById(id);
-    if (!student) throw new Error("Student not found");
+    if (!student) {
+      return null;
+    }
 
     Object.assign(student, studentData);
     return await this.repo.save(student);
@@ -29,7 +31,9 @@ export class StudentRepository {
 
   async delete(id: number) {
     const student = await this.findById(id);
-    if (!student) throw new Error("Student not found");
+    if (!student) {
+      return null;
+    }
 
     await this.repo.delete(id);
     return student;

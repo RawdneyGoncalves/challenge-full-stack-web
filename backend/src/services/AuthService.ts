@@ -8,7 +8,14 @@ import jwt from "jsonwebtoken";
 export class AuthService {
   async register(username: string, password: string): Promise<User> {
     const userRepository = AppDataSource.getRepository(User);
-    const user = userRepository.create({ username, password });
+    
+    const existingUser = await userRepository.findOneBy({ username });
+    if (existingUser) {
+      throw new Error("Username already exists");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = userRepository.create({ username, password: hashedPassword });
     return await userRepository.save(user);
   }
 

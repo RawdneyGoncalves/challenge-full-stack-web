@@ -15,19 +15,47 @@ export class StudentController {
   }
 
   async createStudent(req: Request, res: Response) {
-    const student = await this.studentService.createStudent(req.body);
+    const { username, password } = req.body;
+    const studentData = { username, password };
+    
+    if (!(req as any).user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const student = await this.studentService.createStudent(studentData);
     res.status(201).json(student);
   }
 
   async updateStudent(req: Request, res: Response) {
     const { id } = req.params;
-    const student = await this.studentService.updateStudent(parseInt(id), req.body);
-    res.json(student);
+    const studentData = req.body;
+
+    if (!(req as any).user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const updatedStudent = await this.studentService.updateStudent(Number(id), studentData);
+
+    if (!updatedStudent) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    res.json(updatedStudent);
   }
 
   async deleteStudent(req: Request, res: Response) {
     const { id } = req.params;
-    await this.studentService.deleteStudent(parseInt(id));
-    res.status(204).send();
+
+    if (!(req as any).user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const deletedStudent = await this.studentService.deleteStudent(Number(id));
+
+    if (!deletedStudent) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    res.json({ message: "Student deleted", student: deletedStudent });
   }
 }
