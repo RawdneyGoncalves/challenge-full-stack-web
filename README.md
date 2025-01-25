@@ -70,11 +70,40 @@ npm run start
 - Tratamento de erros
 - Arquitetura modular
 
-## Tecnologias Frontend
+## Instalação do Frontend
+1. Navegar para o diretório frontend
+```bash
+cd frontend
+```
+
+2. Instalar dependências
+```bash
+npm install
+```
+
+3. Configurar variáveis de ambiente
+- Criar arquivo `.env` com configurações necessárias
+- Configurar URL da API backend
+
+4. Iniciar servidor de desenvolvimento
+```bash
+npm run dev
+```
+
+5. Construir para produção
+```bash
+npm run build
+```
+
+## Dependências Frontend
 - Vue.js 3
+- Vue Router
+- Axios
+- Bootstrap
 - TypeScript
 - Vite
 
-## Requisitos
-- Node.js (v18+)
-- Banco de Dados PostgreSQL ou MySQL
+## Scripts Disponíveis
+- `npm run dev`: Iniciar servidor de desenvolvimento
+- `npm run build`: Compilar para produção
+- `npm run preview`: Visualizar build de produção
