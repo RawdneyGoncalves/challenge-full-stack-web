@@ -82,7 +82,7 @@
   <script setup lang="ts">
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
-  import { authService } from '../services/api';
+  import authService from '../services/authService'; 
   import InputSenha from "../components/InputSenha.vue";
   
   const router = useRouter();
@@ -112,4 +112,5 @@
     }
   };
   </script>
+  
   

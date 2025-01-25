@@ -19,34 +19,40 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      alert('Sessão expirada. Faça login novamente.');
-      localStorage.removeItem('jwt');
-      window.location.href = '/login';
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (!refreshToken) {
+          alert('Sessão expirada. Faça login novamente.');
+          localStorage.removeItem('jwt');
+          localStorage.removeItem('refreshToken');
+          window.location.href = '/login';
+          return Promise.reject(error);
+        }
+
+        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+        const { token } = response.data;
+
+        localStorage.setItem('jwt', token);
+
+        originalRequest.headers.Authorization = `Bearer ${token}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error('Erro ao renovar o token:', refreshError);
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('refreshToken');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
     }
+
     return Promise.reject(error);
   }
 );
-
-export const authService = {
-  isAuthenticated(): boolean {
-    const token = localStorage.getItem('jwt');
-    return !!token; 
-  },
-
-  async login(username: string, password: string) {
-    try {
-      const response = await api.post('/auth/login', { username, password });
-      const { token } = response.data;
-
-      localStorage.setItem('jwt', token);
-
-      return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Erro ao fazer login.');
-    }
-  }
-};
 
 export default api;

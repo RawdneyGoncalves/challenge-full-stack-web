@@ -31,7 +31,7 @@ const handleRegistration = async () => {
   isLoading.value = true;
   
   try {
-    const { data } = await axios.post('http://localhost:3000/api/auth/registro', {
+    const { data } = await axios.post('http://localhost:3000/api/auth/register', {
       nome: formData.nome,
       username: formData.username,
       password: formData.password

@@ -56,7 +56,6 @@
       </table>
     </div>
 
-    <!-- Mensagem caso não haja estudantes -->
     <div v-else-if="!isLoading && students.length === 0" class="text-center py-4 text-gray-500">
       Nenhum estudante encontrado.
     </div>
@@ -100,11 +99,11 @@ const deleteStudent = async (id: number) => {
 };
 
 const editStudent = (id: number) => {
-  router.push(`/estudantes/editar/${id}`);
+  router.push(`/studants/edit/${id}`);
 };
 
 const redirectToAddStudent = () => {
-  router.push('/estudantes/adicionar');
+  router.push('/studants/add');
 };
 
 onMounted(fetchStudents);
