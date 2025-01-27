@@ -86,6 +86,7 @@ npm run start
 
 ## Funcionalidades Pendentes
 - Interface de edição de alunos (endpoint da API disponível no Swagger)
+- Colocar a aplicação no docker juntamente com um banco de dados(pendencia backend e front-end)
 
 ## Instalação do Frontend
 1. Navegar para o diretório frontend
