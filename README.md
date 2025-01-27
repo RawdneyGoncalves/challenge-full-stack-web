@@ -1,5 +1,7 @@
 # Aplicação de Gerenciamento de Alunos
 
+Uma aplicação para gerenciamento de matrículas de alunos na turma de Programação Web da instituição Edtech.
+
 ## Estrutura do Projeto
 
 ### Arquitetura do Backend
@@ -23,12 +25,31 @@ backend/
     └── server.ts       # Ponto de entrada da aplicação
 ```
 
-## Tecnologias Backend
-- **Injeção de Dependência**: Inversify
-- **ORM**: TypeORM
-- **Banco de Dados**: PostgreSQL/MySQL
-- **Linguagem**: TypeScript
-- **Framework Web**: Express
+### Arquitetura Backend
+- **Arquitetura Modular**: Organizada em módulos baseados em funcionalidades para melhor escalabilidade e manutenção
+- **Injeção de Dependência**: Utilizada para baixo acoplamento e melhor testabilidade através do `inversify`
+- **Padrão Repository**: Implementado para abstração de acesso a dados
+- **Camada de Serviço**: Separação da lógica de negócios
+- **Middleware**: Autenticação e validação de requisições
+- **Decorators**: Utilizados para definição de rotas, validação de parâmetros e documentação de métodos
+
+### Autenticação
+- Autenticação baseada em JWT
+- Persistência de token no LocalStorage
+- Implementação de refresh token
+- Rotas protegidas
+
+### Testes
+- Testes unitários mockados para controllers e serviços
+- Cobertura de testes para:
+  - AuthController
+  - StudentController
+  - StudentRepository
+  - StudentService
+
+### Documentação da API
+- Documentação Swagger disponível
+- Todos os endpoints documentados incluindo o endpoint de edição de estudantes
 
 ## Configuração do Ambiente
 Crie um arquivo `.env` com as seguintes variáveis:
@@ -63,12 +84,8 @@ npm run build
 npm run start
 ```
 
-## Funcionalidades Principais
-- Injeção de Dependência com Inversify
-- Integração com banco de dados via TypeORM
-- Autenticação JWT
-- Tratamento de erros
-- Arquitetura modular
+## Funcionalidades Pendentes
+- Interface de edição de alunos (endpoint da API disponível no Swagger)
 
 ## Instalação do Frontend
 1. Navegar para o diretório frontend
@@ -107,3 +124,25 @@ npm run build
 - `npm run dev`: Iniciar servidor de desenvolvimento
 - `npm run build`: Compilar para produção
 - `npm run preview`: Visualizar build de produção
+
+## Destaques Técnicos
+- Decorators TypeScript para definição de rotas
+- Middleware para validação de requisições e autenticação
+- Injeção de dependência para melhor testabilidade e manutenção
+- Autenticação JWT com mecanismo de refresh token
+- Padrão repository para acesso a dados
+- Camada de serviço para lógica de negócios
+- Arquitetura modular para melhor organização do código
+
+
+
+## Screenshots do Projeto
+
+### Tela de Login
+![Tela de Login](./images/print2.PNG)
+
+### Lista de Alunos
+![Lista de Alunos](./images/print1.PNG)
+
+### Cadastro de Alunos
+![Cadastro de Alunos](./images/print3.PNG)

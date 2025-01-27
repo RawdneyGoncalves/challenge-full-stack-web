@@ -7,6 +7,7 @@ import Dashboard from '../views/Dashboard.vue';
 import Students from '../views/Students.vue';
 import Register from '../views/Register.vue';
 import AdicionarEstudanteView from '../views/AdicionarEstudanteView.vue';
+import EditarEstudanteView from '../views/EditarEstudanteView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -43,6 +44,13 @@ const routes: Array<RouteRecordRaw> = [
     component: AdicionarEstudanteView,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/students/edit/:id',
+    name: 'EditarEstudante',
+    component: EditarEstudanteView, 
+    meta: { requiresAuth: true },
+  }
+  
 ];
 
 const router = createRouter({
@@ -50,7 +58,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const isAuthenticated = authService.isAuthenticated();
 
   if (to.meta.requiresAuth && !isAuthenticated) {
@@ -61,5 +69,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
 
 export default router;
