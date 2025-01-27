@@ -3,7 +3,8 @@ import type { Student } from '../interfaces/Student';
 
 export const studentService = {
   /**
-   * @returns {Promise<Student[]>}
+   * Busca todos os estudantes cadastrados.
+   * @returns {Promise<Student[]>} Lista de estudantes.
    */
   async fetchStudents(): Promise<Student[]> {
     try {
@@ -16,8 +17,9 @@ export const studentService = {
   },
 
   /**
-   * @param {Partial<Student>} student
-   * @returns {Promise<Student>}
+   * Cria um novo estudante.
+   * @param {Partial<Student>} student - Dados do estudante.
+   * @returns {Promise<Student>} O estudante recém-criado.
    */
   async createStudent(student: Partial<Student>): Promise<Student> {
     try {
@@ -30,7 +32,8 @@ export const studentService = {
   },
 
   /**
-   * @param {number} id
+   * Atualiza os dados de um estudante existente.
+   * @param {number} id - ID do estudante.
    * @param {Partial<Student>} student
    * @returns {Promise<Student>} 
    */
@@ -45,6 +48,7 @@ export const studentService = {
   },
 
   /**
+   * Exclui um estudante pelo ID.
    * @param {number} id
    * @returns {Promise<void>} 
    */
@@ -58,8 +62,9 @@ export const studentService = {
   },
 
   /**
-   * @param {number} id 
-   * @returns {Promise<Student>}
+   * Retorna os dados de um estudante pelo ID.
+   * @param {number} id - ID do estudante.
+   * @returns {Promise<Student>} Dados do estudante.
    */
   async getStudentById(id: number): Promise<Student> {
     try {
