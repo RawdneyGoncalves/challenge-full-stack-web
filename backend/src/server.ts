@@ -1,9 +1,11 @@
-import "reflect-metadata";
 import express from "express";
-import { container } from "./inversify.config";
+import cors from "cors";
+import "reflect-metadata";
 import { AppDataSource } from "./config/database";
 import { routes } from "./routes";
 import { errorHandler } from "./middleware/errorHandler";
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './swagger';
 
 AppDataSource.initialize()
   .then(() => {
@@ -11,7 +13,18 @@ AppDataSource.initialize()
     
     const app = express();
     
+    const corsOptions = {
+      origin: '*',
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    };
+
+    app.use(cors(corsOptions));
+
     app.use(express.json());
+    
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    
     app.use("/api", routes);
     app.use(errorHandler);
 

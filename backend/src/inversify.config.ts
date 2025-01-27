@@ -11,7 +11,7 @@ const container = new Container();
 container.bind<AuthService>(TYPES.AuthService).to(AuthService).inSingletonScope();
 container.bind<StudentService>(TYPES.StudentService).to(StudentService).inSingletonScope();
 container.bind<StudentRepository>(TYPES.StudentRepository).to(StudentRepository).inSingletonScope();
-container.bind<AuthController>(AuthController).to(AuthController).inSingletonScope();
-container.bind<StudentController>(StudentController).to(StudentController).inSingletonScope();
+container.bind<AuthController>(TYPES.AuthController).to(AuthController).inSingletonScope();
+container.bind<StudentController>(TYPES.StudentController).to(StudentController).inSingletonScope();
 
 export { container };
