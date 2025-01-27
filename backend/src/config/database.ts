@@ -3,8 +3,9 @@ import { DataSource } from "typeorm";
 import path from "path";
 import { env } from "./env";
 import { CreateStudentDeletionLog1705161234572 } from "../migrations/CreateStudentDeletionLog1705161234572";
-import { CreateStudentTable1705161234571 } from "../migrations//CreateStudentTable1705161234571";
-import { CreateUserTable1705161234570 } from "../migrations//CreateUserTable1705161234570";
+import { CreateStudentTable1705161234571 } from "../migrations/CreateStudentTable1705161234571";
+import { CreateUserTable1705161234570 } from "../migrations/CreateUserTable1705161234570";
+import { AddRefreshTokenToUser1705161234571 } from "../migrations/AddRefreshTokenToUser1705161234571";
 
 export const AppDataSource = new DataSource({
   type: env.DB_TYPE,
@@ -18,6 +19,7 @@ export const AppDataSource = new DataSource({
     CreateStudentDeletionLog1705161234572,
     CreateStudentTable1705161234571,
     CreateUserTable1705161234570,
+    AddRefreshTokenToUser1705161234571,
   ],
   synchronize: false,
   logging: process.env.DB_LOGGING === "true",

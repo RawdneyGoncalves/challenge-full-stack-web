@@ -16,6 +16,17 @@ export class StudentService {
     return await this.studentRepository.findAll();
   }
 
+  async getStudentById(id: number) {
+    const student = await this.studentRepository.findById(id);
+
+    if (!student) {
+      console.log(`Student with id ${id} not found.`);
+      return null;
+    }
+
+    return student;
+  }
+
   async createStudent(studentData: any) {
     return await this.studentRepository.create(studentData);
   }
@@ -36,16 +47,21 @@ export class StudentService {
 
     if (!student) {
       console.log(`Student with id ${id} not found for deletion.`);
-      return null;
+      return undefined;
     }
 
     const logRepository = AppDataSource.getRepository(StudentDeletionLog);
     await logRepository.save({
       student_id: id,
-      deleted_at: new Date()
+      deleted_at: new Date(),
+      cpf: student.cpf,
+      email: student.email,
+      name: student.name,
+      ra: student.ra
     });
 
     await this.studentRepository.delete(id);
     return student;
   }
+
 }

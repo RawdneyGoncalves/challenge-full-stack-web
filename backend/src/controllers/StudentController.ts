@@ -14,14 +14,26 @@ export class StudentController {
     res.json(students);
   }
 
+  async getStudentById(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const student = await this.studentService.getStudentById(Number(id));
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    res.json(student);
+  }
+
   async createStudent(req: Request, res: Response) {
-    const { username, password } = req.body;
-    const studentData = { username, password };
-    
+    const { name, email, ra, cpf } = req.body;
+
     if (!(req as any).user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    const studentData = { name, email, ra, cpf };
     const student = await this.studentService.createStudent(studentData);
     res.status(201).json(student);
   }
@@ -43,19 +55,29 @@ export class StudentController {
     res.json(updatedStudent);
   }
 
-  async deleteStudent(req: Request, res: Response) {
-    const { id } = req.params;
+async deleteStudent(req: Request, res: Response) {
+  const { id } = req.params;
 
-    if (!(req as any).user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const deletedStudent = await this.studentService.deleteStudent(Number(id));
-
-    if (!deletedStudent) {
-      return res.status(404).json({ error: "Student not found" });
-    }
-
-    res.json({ message: "Student deleted", student: deletedStudent });
+  if (!(req as any).user) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
+
+  const deletedStudent = await this.studentService.deleteStudent(Number(id));
+
+  if (!deletedStudent) {
+    return res.status(404).json({ error: "Student not found" });
+  }
+
+  res.json({
+    message: "Student deleted",
+    student: {
+      ...deletedStudent,
+      cpf: deletedStudent.cpf ?? undefined, 
+      email: deletedStudent.email ?? undefined,
+      name: deletedStudent.name ?? undefined,
+      ra: deletedStudent.ra ?? undefined
+    }
+  });
+}
+
 }

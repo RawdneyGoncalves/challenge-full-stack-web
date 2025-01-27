@@ -12,6 +12,9 @@ export class User {
   @Column({ type: "varchar", nullable: false })
   declare password: string;
 
+  @Column({ type: "varchar", nullable: true })
+  declare refreshToken: string;
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

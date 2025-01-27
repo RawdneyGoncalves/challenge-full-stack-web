@@ -2,7 +2,13 @@ import { injectable } from "inversify";
 import { AppDataSource } from "../config/database";
 import { User } from "../entities/User";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
+
+interface CustomJwtPayload extends JwtPayload {
+  userId: number;
+}
+
 
 @injectable()
 export class AuthService {
@@ -13,22 +19,56 @@ export class AuthService {
     if (existingUser) {
       throw new Error("Username already exists");
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = userRepository.create({ username, password: hashedPassword });
     return await userRepository.save(user);
   }
 
-  async login(username: string, password: string): Promise<string | null> {
+  async login(username: string, password: string): Promise<{ token: string; refreshToken: string }> {
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOneBy({ username });
-
     if (!user) return null;
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return null;
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || "secret", { expiresIn: "1h" });
-    return token;
+    const refreshToken = jwt.sign({ userId: user.id }, process.env.JWT_REFRESH_SECRET || "refreshSecret", { expiresIn: "7d" });
+
+    user.refreshToken = refreshToken;
+    await userRepository.save(user);
+
+    return { token, refreshToken };
+  }
+
+  async refresh(refreshToken: string): Promise<string | null> {
+    try {
+      const decoded = jwt.verify(
+        refreshToken, 
+        process.env.JWT_REFRESH_SECRET || "refreshSecret"
+      ) as CustomJwtPayload;
+  
+      const userRepository = AppDataSource.getRepository(User);
+      const user = await userRepository.findOneBy({ 
+        id: decoded.userId, 
+        refreshToken: refreshToken 
+      });
+  
+      if (!user) {
+        console.log('User not found or refresh token invalid');
+        return null;
+      }
+  
+      const newToken = jwt.sign(
+        { userId: user.id }, 
+        process.env.JWT_SECRET || "secret", 
+        { expiresIn: "1h" }
+      );
+  
+      return newToken;
+    } catch (error) {
+      console.error('Refresh token verification failed:', error);
+      return null;
+    }
   }
 }

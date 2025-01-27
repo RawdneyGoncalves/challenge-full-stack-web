@@ -11,11 +11,11 @@ export class AuthController {
 
   async login(req: Request, res: Response) {
     const { username, password } = req.body;
-    const token = await this.authService.login(username, password);
-    if (!token) {
+    const result = await this.authService.login(username, password);
+    if (!result) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
-    res.json({ token });
+    res.json({ token: result.token, refreshToken: result.refreshToken });
   }
 
   async register(req: Request, res: Response) {
@@ -26,5 +26,14 @@ export class AuthController {
     } catch (error) {
       res.status(400).json({ error: "Failed to register user" });
     }
+  }
+
+  async refresh(req: Request, res: Response) {
+    const { refreshToken } = req.body;
+    const newToken = await this.authService.refresh(refreshToken);
+    if (!newToken) {
+      return res.status(401).json({ error: "Invalid refresh token" });
+    }
+    res.json({ token: newToken });
   }
 }
